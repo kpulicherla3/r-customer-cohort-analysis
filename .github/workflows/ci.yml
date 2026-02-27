@@ -5,4 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "CI OK"
+      - uses: r-lib/actions/setup-r@v2
+      - name: Generate reproducible cohort chart
+        shell: bash
+        run: |
+          Rscript -e 'dir.create("docs", showWarnings = FALSE, recursive = TRUE); suppressWarnings(suppressMessages(library(ggplot2))); cohorts <- data.frame(cohort_month = as.Date(c("2025-01-01","2025-02-01","2025-03-01")), users = c(2,1,0)); p <- ggplot(cohorts, aes(x = cohort_month, y = users)) + geom_col(fill = "#2C7FB8") + labs(title = "Users by Cohort Month", x = "Cohort Month", y = "Users") + theme_minimal(); ggsave("docs/cohort_counts.png", plot = p, width = 7, height = 4, dpi = 150, device = "png", bg = "white"); write.csv(cohorts, "docs/cohort_counts.csv", row.names = FALSE)'
+      - name: Verify chart outputs exist
+        run: test -f docs/cohort_counts.png && test -f docs/cohort_counts.csv
