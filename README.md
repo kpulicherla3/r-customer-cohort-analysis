@@ -12,3 +12,13 @@ See project-specific documentation in the `docs/` directory or repository root.
 
 ## Status
 Active development.
+
+## Chart output
+Generate a reproducible cohort chart with:
+
+```bash
+Rscript R/cohort_analysis.R
+```
+
+This writes `docs/cohort_counts.png`.
+For reproducibility, the script also writes `docs/cohort_counts.csv` with the plotting data.
